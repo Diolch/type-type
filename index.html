@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KeySprint — Focused Typing Practice</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark">⌨</span><div><strong>KeySprint</strong><small>physical keyboard lab</small></div></div>
+      <div class="top-right">
+        <div class="streak"><span class="pulse"></span><span id="sessionState">READY TO PRACTICE</span></div>
+        <button class="help-btn" id="helpBtn" title="Help / 使用说明" aria-label="Help">?</button>
+        <button class="help-btn" id="suggestBtn" title="Share feedback" aria-label="Suggestions">💬</button>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div>
+        <p class="eyebrow">FOUR LEVELS / ONE STEADY FLOW</p>
+        <h1>Pick a level,<br><em>find your rhythm.</em></h1>
+        <p class="lede">入门 to 挑战. Type with a physical keyboard, watch live feedback, and improve one level at a time.</p>
+      </div>
+    </section>
+
+    <nav class="levels" id="levelNav" aria-label="Difficulty levels">
+      <button class="active" data-level="beginner"><b>入门</b><span>Beginner</span><i>home row - 5-10 WPM</i></button>
+      <button data-level="basic"><b>基础</b><span>Basic</span><i>cross-region - 10-20 WPM</i></button>
+      <button data-level="advanced"><b>进阶</b><span>Advanced</span><i>blind touch - 20-35 WPM</i></button>
+      <button data-level="challenge"><b>挑战</b><span>Challenge</span><i>timed - 35+ WPM</i></button>
+    </nav>
+    <p class="level-desc" id="levelDesc"></p>
+
+    <section class="dashboard">
+      <div class="practice-card card">
+        <div class="card-head"><div><span class="label">PASSAGE</span><h2 id="passageTitle">Small steps, clear ideas.</h2></div><div class="head-actions"><button class="ghost" id="focusPractice">🎯 Focus practice</button><button class="ghost" id="newPassage">↻ New passage</button></div></div>
+
+        <div class="challenge-bar hidden" id="challengeBar">
+          <label class="target-label">Target speed <input type="number" id="targetWpm" min="10" max="120" value="40" inputmode="numeric"> <span>WPM</span></label>
+          <label class="len-label">Length
+            <select id="challengeLen">
+              <option value="short">Short</option>
+              <option value="medium" selected>Medium</option>
+              <option value="long">Long</option>
+            </select>
+          </label>
+          <span class="challenge-time">Time left <b id="challengeTime">--:--</b></span>
+          <span class="challenge-note">The passage stays visible only for the time your target speed allows.</span>
+        </div>
+
+        <div class="home-row hidden" id="homeRowHint">
+          <div class="home-keys">
+            <span class="hk pinky">A</span><span class="hk ring">S</span><span class="hk mid">D</span><span class="hk index bump">F</span>
+            <span class="hk-gap"></span>
+            <span class="hk index bump">J</span><span class="hk mid">K</span><span class="hk ring">L</span><span class="hk pinky">;</span>
+          </div>
+          <p>Left hand rests on <b>A S D F</b>, right hand on <b>J K L ;</b> - the bumps on <b>F</b> and <b>J</b> are your home markers.</p>
+        </div>
+
+        <div class="passage" id="passage" aria-label="Typing passage"></div>
+        <div class="input-row"><span class="keyboard-dot">⌨</span><input id="typingInput" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Type the passage here" placeholder="Click here, then start typing..."><span class="shortcut">ESC to reset</span></div>
+        <div class="progress-track"><div id="progressBar"></div></div>
+        <div class="tip"><span>TIP</span><span id="tipText"></span></div>
+      </div>
+
+      <aside class="stats-card card">
+        <div class="card-head"><span class="label">LIVE FEEDBACK</span><span class="live"><i></i> LIVE</span></div>
+        <div class="main-stat"><span id="wpm">0</span><small>WPM</small><em class="goal" id="goal">入门 - 5-10 WPM</em></div>
+        <div class="stat-grid">
+          <div><strong id="accuracy">100%</strong><span>accuracy</span></div>
+          <div><strong id="errors">0</strong><span>mistakes</span></div>
+          <div><strong id="corrections">0</strong><span>corrections</span></div>
+          <div><strong id="timer">00:00</strong><span id="timerLabel">elapsed</span></div>
+        </div>
+        <div class="meter"><div class="meter-label"><span>SESSION SCORE</span><b id="score">—</b></div><div class="meter-track"><div id="scoreBar"></div></div></div>
+        <div class="feedback" id="feedback">Finish the passage to get a personal suggestion.</div>
+        <button class="reset" id="resetBtn">Reset session <span>⟲</span></button>
+      </aside>
+    </section>
+
+    <section class="how card">
+      <div class="how-title"><span class="label">HOW WPM WORKS</span><h2>A fair measure of useful speed.</h2></div>
+      <div class="formula"><span>( correct characters / 5 )</span><b>/</b><span>elapsed minutes</span><strong>= WPM</strong></div>
+      <p>Spaces and punctuation count as characters. Only correctly typed English characters count toward speed. Mistakes are counted in real time - every wrong keystroke counts, even after you correct it - and corrections track your backspaces.</p>
+    </section>
+
+    <footer><span>KEYSPRINT / DESKTOP PRACTICE</span><span>Made for a physical computer keyboard - v1.4</span></footer>
+  </main>
+
+  <div class="modal hidden" id="helpModal" role="dialog" aria-modal="true" aria-label="Help">
+    <div class="modal-card">
+      <button class="modal-close" id="helpClose" aria-label="Close">×</button>
+      <h2>How to use KeySprint</h2>
+      <p style="color:var(--muted);font-size:13px;margin:0">A physical-keyboard typing tutor with four levels and live feedback.</p>
+      <div class="modal-body">
+        <h3>Getting started</h3>
+        <ul>
+          <li>Pick a level: <b>入门 Beginner</b> (learn the keys) → <b>基础 Basic</b> → <b>进阶 Advanced</b> → <b>挑战 Challenge</b>. Each level shows its WPM goal.</li>
+          <li>Click the input box, then type the passage with a physical keyboard. Correct characters turn blue, mistakes turn orange.</li>
+        </ul>
+        <h3>Useful actions</h3>
+        <ul>
+          <li>Want a new text? Try <b>New passage</b>.</li>
+          <li>Want to start over? Press <b>Esc</b> or hit <b>Reset session</b>.</li>
+          <li>Struggling with certain keys? Try <b>Focus practice</b> - it builds a short, randomized drill that features your weak keys more often.</li>
+          <li>In <b>挑战 Challenge</b>, set a <b>Target speed</b> (WPM) and a <b>Length</b> (Short / Medium / Long). The text stays only as long as your target speed allows.</li>
+        </ul>
+        <h3>How results are measured</h3>
+        <ul>
+          <li><b>WPM</b> = (correctly typed English characters / 5) / elapsed minutes. Spaces and punctuation count; wrong characters do not.</li>
+          <li><b>Mistakes</b> = every wrong keystroke, counted in real time, even after you correct it. <b>Corrections</b> = backspace/delete presses.</li>
+          <li><b>Accuracy</b> = correct keystrokes / (correct keystrokes + mistakes).</li>
+          <li><b>Session score</b> = 70% accuracy + 30% speed (speed capped at 60 WPM), scaled to 0-100.</li>
+          <li><b>Weak keys</b> = the letters you miss most, ranked by error rate then error count. KeySprint remembers them in your browser (localStorage) to power Focus practice; clear your site data to reset this memory.</li>
+        </ul>
+        <p>A full copy of this guide is in <code>MANUAL.md</code>.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="suggestModal" role="dialog" aria-modal="true" aria-label="Suggestions">
+    <div class="modal-card">
+      <button class="modal-close" id="suggestClose" aria-label="Close">×</button>
+      <h2>Help make KeySprint better</h2>
+      <p class="suggest-intro">Thank you for trying KeySprint! Your thoughts - big or small - genuinely help us improve. Please share what worked well, what felt confusing, or anything you would change.</p>
+      <form id="suggestForm" class="suggest-form">
+        <label class="field-label" for="suggestText">Your suggestion *</label>
+        <textarea id="suggestText" rows="5" placeholder="What would make this more useful or more enjoyable for you?" required></textarea>
+        <label class="field-label" for="suggestLiked">Anything you especially liked? (optional)</label>
+        <input type="text" id="suggestLiked" placeholder="e.g. the Focus practice drill really helped me">
+        <button type="submit" class="suggest-submit">Send my feedback</button>
+        <p class="suggest-offline-note">This version does not collect suggestions. After you send, your message will be copied to your clipboard - just paste it to the author.</p>
+        <p class="suggest-status" id="suggestStatus" aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
